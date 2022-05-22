@@ -1,13 +1,16 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const auth = require('./middleware/authMiddle');
 
 app.use(bodyParser.json());
 app.use(cors());
 
 const Station = require('./models/station');
+const User = require('./models/user');
 
 mongoose.connect(
   `mongodb+srv://admin:admin@cluster0.tr2wt.mongodb.net/?retryWrites=true&w=majority`,
@@ -55,6 +58,40 @@ app.post('/api/update', async (req, res) => {
 app.get('/api/station/:id', async (req, res) => {
   const result = await Station.findById(req.params.id);
   res.json(result);
+});
+
+// User Section
+app.post('/api/user/register', async (req, res) => {
+  let user = await User.findOne({ email: req.body.email });
+
+  if (user) return res.status(400).send('User already registered');
+
+  user = new User({
+    email: req.body.email,
+    password: req.body.password,
+  });
+
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
+
+  await user.save();
+
+  const token = user.generateAuthToken();
+
+  res.header('x-auth-token', token).send(user);
+});
+
+app.post('/api/user/login', async (req, res) => {
+  let user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send('Invalid email or passowrd');
+
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+
+  if (!validPassword) return res.status(400).send('Invalid email or passowrd');
+
+  const token = user.generateAuthToken();
+
+  res.send(token);
 });
 
 const port = process.env.PORT || 5000;
