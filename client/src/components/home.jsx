@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import StationResult from './stationResult';
 import StationListGroup from './common/stationListGroup';
+import jwtDecode from 'jwt-decode';
 
 const Home = () => {
   const [stations, setStations] = useState([]);
@@ -10,6 +11,9 @@ const Home = () => {
   const [stationChange, setStationChange] = useState('Putin FM');
 
   const navigate = useNavigate();
+
+  const token = localStorage.getItem('token');
+  const user = token ? jwtDecode(token) : null;
 
   const getStations = async () => {
     const { data: stations } = await axios.get(`/api/stations`);
@@ -45,7 +49,7 @@ const Home = () => {
               onClick={() => navigate('/add')}
               className='btn btn-primary btn-sm m-2'
             >
-              Add Station
+              {user ? 'Add Station' : 'Sign In to Add Station'}
             </button>
           </div>
 

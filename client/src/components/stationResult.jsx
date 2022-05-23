@@ -3,7 +3,7 @@ import React from 'react';
 const StationResult = ({ stations, onStationChange }) => {
   return (
     <>
-      <div className='card'>
+      <div className='card' style={{ backgroundColor: '#c7ecee' }}>
         <div className='card-body'>
           <h4 className='text-center'>Putin FM 66,6</h4>
           <ul className='list-group'>

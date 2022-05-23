@@ -4,16 +4,17 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const auth = require('./middleware/authMiddle');
+require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static('client/build'));
 
 const Station = require('./models/station');
 const User = require('./models/user');
 
 mongoose.connect(
-  `mongodb+srv://admin:admin@cluster0.tr2wt.mongodb.net/?retryWrites=true&w=majority`,
+  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/?retryWrites=true&w=majority`,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -61,6 +62,8 @@ app.get('/api/station/:id', async (req, res) => {
 });
 
 // User Section
+
+// Register
 app.post('/api/user/register', async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
 
@@ -81,6 +84,7 @@ app.post('/api/user/register', async (req, res) => {
   res.header('x-auth-token', token).send(user);
 });
 
+// Login
 app.post('/api/user/login', async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
   if (!user) return res.status(400).send('Invalid email or passowrd');
@@ -93,6 +97,13 @@ app.post('/api/user/login', async (req, res) => {
 
   res.send(token);
 });
+
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path');
+  app.get('/*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
+  });
+}
 
 const port = process.env.PORT || 5000;
 

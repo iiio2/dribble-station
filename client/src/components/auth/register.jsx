@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Input from '../common/input';
+
 import axios from 'axios';
 
 const Register = () => {
@@ -14,6 +16,7 @@ const Register = () => {
         email,
         password,
       });
+      localStorage.setItem('token', response.headers['x-auth-token']);
       alert('User registered! Login with your credentials');
       window.location.href = '/login';
     } catch (e) {
@@ -29,7 +32,7 @@ const Register = () => {
       <form onSubmit={handleRegister} className='mt-4'>
         <div className='form-group'>
           <label htmlFor='email'>Email</label>
-          <input
+          <Input
             type='email'
             className='form-control'
             placeholder='Enter Email...'
@@ -40,7 +43,7 @@ const Register = () => {
 
         <div className='form-group'>
           <label htmlFor='password'>Password</label>
-          <input
+          <Input
             type='password'
             className='form-control'
             placeholder='Enter Password...'

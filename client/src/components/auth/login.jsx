@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Input from '../common/input';
 import axios from 'axios';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('test1@gmail.com');
+  const [password, setPassword] = useState('123456');
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ const Login = () => {
       <form onSubmit={handleLogin} className='mt-4'>
         <div className='form-group'>
           <label htmlFor='email'>Email</label>
-          <input
+          <Input
             type='email'
             className='form-control'
             placeholder='Enter Email...'
@@ -39,7 +40,7 @@ const Login = () => {
 
         <div className='form-group'>
           <label htmlFor='password'>Password</label>
-          <input
+          <Input
             type='password'
             className='form-control'
             placeholder='Enter Password...'

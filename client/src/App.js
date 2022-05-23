@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './components/home';
 import AddStation from './components/addStation';
@@ -7,10 +7,9 @@ import Register from './components/auth/register';
 import Login from './components/auth/login';
 import RequireAuth from './components/hoc/auth';
 import ProtectedRoute from './components/hoc/protect';
-import jwtDecode from 'jwt-decode';
 
 const App = () => {
-  const tk = localStorage.getItem('token');
+  const user = localStorage.getItem('token');
   const logout = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
@@ -20,14 +19,23 @@ const App = () => {
     <div className='container'>
       <h3 className='text-center display-4'>Stations</h3>
 
-      {tk ? (
+      {user ? (
         <button onClick={logout} className='btn btn-light'>
           Logout
         </button>
       ) : null}
 
       <Routes>
-        <Route exact path='/update/:id' element={<UpdateStation />} />
+        <Route
+          exact
+          path='/update/:id'
+          element={
+            <RequireAuth redirectTo='/login'>
+              <UpdateStation />
+            </RequireAuth>
+          }
+        />
+
         <Route
           exact
           path='/add'
