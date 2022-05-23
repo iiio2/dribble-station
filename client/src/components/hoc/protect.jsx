@@ -6,6 +6,7 @@ function ProtectedRoute({ children, redirectTo }) {
   try {
     const jwt = localStorage.getItem('token');
     const user = jwtDecode(jwt);
+
     if (user) {
       return <Navigate to={redirectTo} />;
     }

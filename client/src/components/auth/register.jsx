@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Register = () => {
@@ -13,8 +14,8 @@ const Register = () => {
         email,
         password,
       });
-      localStorage.setItem('token', response.headers['x-auth-token']);
-      alert('User registered');
+      alert('User registered! Login with your credentials');
+      window.location.href = '/login';
     } catch (e) {
       alert('Something went wrong');
     }
@@ -24,7 +25,8 @@ const Register = () => {
 
   return (
     <>
-      <form onSubmit={handleRegister}>
+      <Link to='/'>Back to Station</Link>
+      <form onSubmit={handleRegister} className='mt-4'>
         <div className='form-group'>
           <label htmlFor='email'>Email</label>
           <input
@@ -50,6 +52,7 @@ const Register = () => {
           Register
         </button>
       </form>
+      <Link to='/login'>Already Registered ? Login Here</Link>
     </>
   );
 };

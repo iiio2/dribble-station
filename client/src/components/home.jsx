@@ -19,7 +19,7 @@ const Home = () => {
 
   useEffect(() => {
     getStations();
-  }, []);
+  }, [loading]);
 
   const handleStation = (station) => {
     setStationChange(station);
@@ -40,13 +40,15 @@ const Home = () => {
     <main>
       <div className='card-block'>
         <div className='card'>
-          <h3 className='text-center'>Stations</h3>
-          <button
-            onClick={() => navigate('/add')}
-            className='btn btn-primary btn-sm'
-          >
-            Add Station
-          </button>
+          <div className='btn-fields'>
+            <button
+              onClick={() => navigate('/add')}
+              className='btn btn-primary btn-sm m-2'
+            >
+              Add Station
+            </button>
+          </div>
+
           <div className='card-body d-flex justify-content-around'>
             <StationListGroup
               stations={stations}

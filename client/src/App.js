@@ -5,25 +5,47 @@ import AddStation from './components/addStation';
 import UpdateStation from './components/update';
 import Register from './components/auth/register';
 import Login from './components/auth/login';
-import jwtDecode from 'jwt-decode';
 import RequireAuth from './components/hoc/auth';
 import ProtectedRoute from './components/hoc/protect';
+import jwtDecode from 'jwt-decode';
 
 const App = () => {
+  const tk = localStorage.getItem('token');
+  const logout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  };
+
   return (
     <div className='container'>
+      <h3 className='text-center display-4'>Stations</h3>
+
+      {tk ? (
+        <button onClick={logout} className='btn btn-light'>
+          Logout
+        </button>
+      ) : null}
+
       <Routes>
         <Route exact path='/update/:id' element={<UpdateStation />} />
         <Route
           exact
           path='/add'
           element={
-            <RequireAuth redirectTo='/login'>
+            <RequireAuth redirectTo='/login?must-login'>
               <AddStation />
             </RequireAuth>
           }
         />
-        <Route exact path='/register' element={<Register />} />
+        <Route
+          exact
+          path='/register'
+          element={
+            <ProtectedRoute redirectTo='/'>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
         <Route
           exact
           path='/login'

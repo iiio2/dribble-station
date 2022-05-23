@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
@@ -15,18 +16,16 @@ const Login = () => {
       });
 
       localStorage.setItem('token', jwt);
-
-      alert('User logged in');
+      window.location.href = '/';
     } catch (e) {
       alert('Something went wrong');
     }
-
-    console.log(email, password);
   };
 
   return (
     <>
-      <form onSubmit={handleLogin}>
+      <Link to='/'>Back to Station</Link>
+      <form onSubmit={handleLogin} className='mt-4'>
         <div className='form-group'>
           <label htmlFor='email'>Email</label>
           <input
@@ -52,6 +51,7 @@ const Login = () => {
           Login
         </button>
       </form>
+      <Link to='/register'>Not logged In ? Register Now</Link>
     </>
   );
 };
